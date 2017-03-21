@@ -8,11 +8,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 
 /**
  * GKislin
@@ -32,6 +27,11 @@ public class UserMealsUtil {
         long dateStart = new Date().getTime();
         List<UserMealWithExceed> list = getFilteredWithExceeded(mealList, LocalTime.of(7, 0), LocalTime.of(12,0), 2000);
         long dateFinish = new Date().getTime();
+
+        for (UserMealWithExceed meal:
+                list) {
+            System.out.println(meal);
+        }
 
         System.out.println("Потратил времени: " + (dateFinish - dateStart));
         System.out.println();
@@ -56,18 +56,13 @@ public class UserMealsUtil {
             }
             System.out.println(k + " " + (time/count));
         }
-
-        for (UserMealWithExceed meal:
-             list) {
-            System.out.println(meal);
-        }
 //        .toLocalDate();
 //        .toLocalTime();
     }
 
     public static List<UserMealWithExceed>  getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         // TODO return filtered list with correctly exceeded field
-        Map<LocalDate,Integer> map = new TreeMap<>();
+        Map<LocalDate,Integer> map = new HashMap<>();
         mealList
                 .forEach((usermeal) -> {
                     if (map.containsKey(usermeal.getDateTime().toLocalDate())){
@@ -77,7 +72,7 @@ public class UserMealsUtil {
 
                 });
 
-        List<UserMealWithExceed> listExceed = new LinkedList<>();
+        List<UserMealWithExceed> listExceed = new ArrayList<>();
 
         mealList.stream()
                 .filter(meal -> TimeUtil.isBetween(meal.getDateTime().toLocalTime(), startTime, endTime))

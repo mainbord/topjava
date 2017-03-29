@@ -31,4 +31,21 @@ public class MealWithExceed {
                 ", exceed=" + exceed +
                 '}';
     }
+
+    public String getDateTime() {
+
+        return dateTime.toString().replaceAll("T{1}"," ");
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getCalories() {
+        return calories;
+    }
+
+    public boolean isExceed() {
+        return exceed;
+    }
 }

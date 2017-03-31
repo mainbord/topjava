@@ -12,6 +12,39 @@
     .greantext {
         color: green;
     }
+
+
+    .tg {
+        border-collapse: collapse;
+        border-spacing: 0;
+        border-color: #ccc;
+    }
+
+    .tg td {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        padding: 10px 5px;
+        border-style: solid;
+        border-width: 1px;
+        overflow: hidden;
+        word-break: normal;
+        border-color: #ccc;
+        background-color: #fff;
+    }
+
+    .tg th {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        font-weight: normal;
+        padding: 10px 5px;
+        border-style: solid;
+        border-width: 1px;
+        overflow: hidden;
+        word-break: normal;
+        border-color: #ccc;
+        color: #333;
+        background-color: #f0f0f0;
+    }
 </style>
 
 <body>
@@ -26,27 +59,32 @@
         <th width="120">Калории</th>
     </tr>
 
-<c:forEach items="${requestScope.values().toArray()[4]}" var="attr">
-
-        <c:if test="${attr.isExceed()}">
-            <tr class="redtext">
-                <td>${attr.getDateTime()}</td>
-                <td>${attr.getDescription()}</td>
-                <td>${attr.getCalories()}</td>
-            </tr>
-        </c:if>
-        <c:if test="${!attr.isExceed()}">
-            <tr class="greantext">
-            <td>${attr.getDateTime()}</td>
-            <td>${attr.getDescription()}</td>
-            <td>${attr.getCalories()}</td>
-            </tr>
-        </c:if>
-
-</c:forEach>
+    <c:forEach items="${meals}" var="attr">
+        <c:choose>
+            <c:when test="${attr.isExceed()}">
+                <tr class="redtext">
+                    <td>${attr.getDateTime()}</td>
+                    <td>${attr.getDescription()}</td>
+                    <td>${attr.getCalories()}</td>
+                </tr>
+            </c:when>
+            <c:otherwise>
+                <tr class="greantext">
+                    <td>${attr.getDateTime()}</td>
+                    <td>${attr.getDescription()}</td>
+                    <td>${attr.getCalories()}</td>
+                </tr>
+            </c:otherwise>
+        </c:choose>
+    </c:forEach>
 </table>
+
 <br>
 <br>
 <br>
+
+
+
+
 </body>
 </html>

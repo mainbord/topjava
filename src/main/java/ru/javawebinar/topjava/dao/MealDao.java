@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.dao;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealWithExceed;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
 public interface MealDao {
     public void add(Meal meal);
 
-    public void update(Meal person);
+    public void update(int id, LocalDateTime date, String description, int calories);
 
     public void remove(int id);
 

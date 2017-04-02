@@ -9,7 +9,7 @@
     .redtext {
         color: red;
     }
-    .greantext {
+    .greentext {
         color: green;
     }
 
@@ -54,37 +54,64 @@
 
 <table class="tg">
     <tr>
+        <th width="50">id</th>
         <th width="200">Дата и время</th>
         <th width="120">Оисание</th>
         <th width="120">Калории</th>
+        <th width="120"></th>
+        <th width="120"></th>
     </tr>
 
-    <c:forEach items="${meals}" var="attr">
-        <c:choose>
-            <c:when test="${attr.isExceed()}">
-                <tr class="redtext">
-                    <td>${attr.getDateTime()}</td>
-                    <td>${attr.getDescription()}</td>
-                    <td>${attr.getCalories()}</td>
-                </tr>
-            </c:when>
-            <c:otherwise>
-                <tr class="greantext">
-                    <td>${attr.getDateTime()}</td>
-                    <td>${attr.getDescription()}</td>
-                    <td>${attr.getCalories()}</td>
-                </tr>
-            </c:otherwise>
-        </c:choose>
+    <c:forEach items="${meals}" var="meal">
+        <tr>
+            <form action="${pageContext.request.contextPath}/meals" method="post">
+            <c:choose>
+                <c:when test="${meal.isExceed()}">
+                    <td class="redtext">${meal.id}</td>
+                    <td class="redtext">${meal.dateTime}</td>
+                    <td class="redtext">${meal.description}</td>
+                    <td class="redtext">${meal.calories}</td>
+                </c:when>
+                <c:otherwise>
+                    <td class="greentext">${meal.id}</td>
+                    <td class="greentext">${meal.dateTime}</td>
+                    <td class="greentext">${meal.description}</td>
+                    <td class="greentext">${meal.calories}</td>
+                </c:otherwise>
+            </c:choose>
+
+                <td><a href="meals?action=edit&mealId=<c:out value="${meal.id}"/>">edit</a></td>
+                <td><a href="meals?action=delete&mealId=<c:out value="${meal.id}"/>">Delete</a></td>
+
+
+<%--            <td><input type="submit" value="Редактировать"></td>
+            <td><input type="submit" value="Удалить"></td>--%>
+            </form>
+        </tr>
     </c:forEach>
 </table>
 
 <br>
-<br>
-<br>
 
+<h2>Add a Meal</h2>
 
+<%--<c:url var="addAction" value="/people/add"/>--%>
 
+<form action="${pageContext.request.contextPath}/meals" method="post">
 
+    <c:if test="${!empty meal.id}">
+        <label>id</label> <input type="text" id="id" name="id" value=${meal.id}>
+    </c:if>
+
+<%--    <label>id</label> <input type="text" id="id" name="id" value=${meal.id}>--%>
+    <br>
+    <label>Дата</label> <input type="datetime-local" id="date" name="date" value=${meal.dateTime}>
+    <br>
+    <label>Описание</label> <input type="text" id="description" name="description" value=${meal.description}>
+    <br>
+    <label>Калории</label> <input type="text" id="calories" name="calories" value=${meal.calories}>
+    <br>
+    <p><td><input type="submit" value="Добавить"></td></p>
+</form>
 </body>
 </html>

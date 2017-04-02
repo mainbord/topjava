@@ -41,9 +41,9 @@ public class MealWithExceed {
 
     public int getId() {return id;}
 
-    public String getDateTime() {
+    public LocalDateTime getDateTime() {
 
-        return dateTime.toString().replaceAll("T{1}"," ");
+        return dateTime;
     }
 
     public String getDescription() {

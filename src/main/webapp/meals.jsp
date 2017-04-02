@@ -63,30 +63,24 @@
     </tr>
 
     <c:forEach items="${meals}" var="meal">
+        <jsp:useBean id="meal" scope="page" type="ru.javawebinar.topjava.model.MealWithExceed"/>
         <tr>
-            <form action="${pageContext.request.contextPath}/meals" method="post">
             <c:choose>
-                <c:when test="${meal.isExceed()}">
+                <c:when test="${meal.exceed}">
                     <td class="redtext">${meal.id}</td>
-                    <td class="redtext">${meal.dateTime}</td>
+                    <td class="redtext">${meal.dateTime.toString().replaceAll("T{1}"," ")}</td>
                     <td class="redtext">${meal.description}</td>
                     <td class="redtext">${meal.calories}</td>
                 </c:when>
                 <c:otherwise>
                     <td class="greentext">${meal.id}</td>
-                    <td class="greentext">${meal.dateTime}</td>
+                    <td class="greentext">${meal.dateTime.toString().replaceAll("T{1}"," ")}</td>
                     <td class="greentext">${meal.description}</td>
                     <td class="greentext">${meal.calories}</td>
                 </c:otherwise>
             </c:choose>
-
-                <td><a href="meals?action=edit&mealId=<c:out value="${meal.id}"/>">edit</a></td>
-                <td><a href="meals?action=delete&mealId=<c:out value="${meal.id}"/>">Delete</a></td>
-
-
-<%--            <td><input type="submit" value="Редактировать"></td>
-            <td><input type="submit" value="Удалить"></td>--%>
-            </form>
+            <td><a href="meals?action=edit&mealId=<c:out value="${meal.id}"/>">edit</a></td>
+            <td><a href="meals?action=delete&mealId=<c:out value="${meal.id}"/>">Delete</a></td>
         </tr>
     </c:forEach>
 </table>

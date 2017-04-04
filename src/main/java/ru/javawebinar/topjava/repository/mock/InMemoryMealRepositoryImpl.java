@@ -1,13 +1,16 @@
 package ru.javawebinar.topjava.repository.mock;
 
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.util.UsersUtil;
 
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * GKislin
@@ -23,26 +26,47 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal save(Meal meal) {
+        if (meal.getUserId() == null)
+            return null;
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
         }
-        repository.put(meal.getId(), meal);
-        return meal;
+/*        repository.put(meal.getId(), meal);
+        return meal;*/
+        Meal mealRep = repository.get(meal.getId());
+        if (mealRep == null && meal.isNew()) {
+            repository.put(meal.getId(), meal);
+            return meal;
+        } else if (mealRep != null && !meal.isNew()) {
+            if (mealRep.getUserId().equals(meal.getUserId())) {
+                repository.put(meal.getId(), meal);
+                return meal;
+            }
+        }
+        return null;
     }
 
     @Override
-    public void delete(int id) {
-        repository.remove(id);
+    public boolean delete(int id, Integer userId)
+    {
+        Predicate<Meal> p1 = meal -> meal.getId() == id && meal.getUserId().equals(userId);
+
+        return repository.remove(id) != null && repository.values().stream().anyMatch(p1);
     }
 
     @Override
-    public Meal get(int id) {
-        return repository.get(id);
+    public Meal get(int id, Integer userId) {
+        Meal temlMeal = repository.get(id);
+        return repository.get(id) == null ? null : repository.get(id).getUserId().equals(userId) ? repository.get(id) : null;
     }
 
     @Override
     public Collection<Meal> getAll() {
-        return repository.values();
+
+        return repository.values().stream()
+                .sorted(Comparator.comparing(Meal::getTime)).collect(Collectors.toList());
     }
+
+
 }
 

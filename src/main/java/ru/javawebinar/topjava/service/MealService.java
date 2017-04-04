@@ -1,16 +1,17 @@
 package ru.javawebinar.topjava.service;
 
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.to.MealWithExceed;
 
 import java.util.Collection;
 
 public interface MealService {
 
-    Meal save(Meal Meal);
+    void save(Meal meal, Integer userId);
 
-    boolean delete(int id);
+    void delete(int id, Integer userId);
 
-    Meal get(int id);
+    Meal get(Integer id, Integer userId);
 
-    Collection<Meal> getAll();
+    Collection<MealWithExceed> getAll(Integer userId, int calories);
 }

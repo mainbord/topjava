@@ -55,25 +55,16 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     public List<User> getAll() {
         LOG.info("getAll");
         List<User> users = new ArrayList<>(repository.values());
-        Collections.sort(users, Comparator.comparing(NamedEntity::getName));
+        Collections.sort(users, Comparator.comparing(User::getName));
         return users;
     }
 
     @Override
     public User getByEmail(String email) {
         LOG.info("getByEmail " + email);
-
-        List<User> templist = repository.values().stream()
+        return repository.values().stream()
                 .filter(user -> Objects.equals(user.getEmail(), email))
-                .collect(Collectors.toList());
-        return templist.size() >= 1 ? templist.get(0) : null;
-
-/*        for (Map.Entry<Integer,User> pair:
-             repository.entrySet()) {
-            if (pair.getValue().getEmail().equals(email)){
-                return pair.getValue();
-            }
-        }
-        return null;*/
+                .findFirst()
+                .orElse(null);
     }
 }

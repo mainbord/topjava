@@ -21,12 +21,7 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        new MealsUtil();
-        for (Meal meal:
-                MealsUtil.MEALS) {
-            save(meal);
-        }
-        System.out.println(repository.size());
+        MealsUtil.MEALS.forEach(this::save);
     }
 
     @Override
@@ -34,8 +29,6 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
         if (meal.getUserId() == null) {return null;}
         boolean old = meal.isNew();
         if (old) {meal.setId(counter.incrementAndGet());}
-/*        repository.put(meal.getId(), meal);
-        return meal;*/
         Meal mealRep = repository.get(meal.getId());
         if (mealRep == null && old) {
             repository.put(meal.getId(), meal);
@@ -49,18 +42,31 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
         return null;
     }
 
+
+    /*3.1: если еда отсутствует или чужая, возвращать null/false (см. комментарии в UserRepository)*/
+    public Meal save(Meal meal, Integer userID) {
+        if (meal == null || userID == null) return null;
+        boolean old = meal.isNew();
+        if (old) {meal.setId(counter.incrementAndGet());}
+        Meal mealRep = repository.get(meal.getId());
+        if (mealRep == null && old) {
+            repository.put(meal.getId(), meal);
+            return meal;
+        }
+        return null;
+    }
+
     @Override
     public boolean delete(int id, Integer userId)
     {
         Predicate<Meal> p1 = meal -> meal.getId() == id && meal.getUserId().equals(userId);
-
-        return repository.remove(id) != null && repository.values().stream().anyMatch(p1);
+        return repository.values().stream().anyMatch(p1) && repository.remove(id) != null;
     }
 
     @Override
     public Meal get(int id, Integer userId) {
-        Meal temlMeal = repository.get(id);
-        return repository.get(id) == null ? null : repository.get(id).getUserId().equals(userId) ? repository.get(id) : null;
+        Meal tempMeal = repository.get(id);
+        return tempMeal == null ? null : tempMeal.getUserId().equals(userId) ? tempMeal : null;
     }
 
     @Override
@@ -68,8 +74,8 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
         return repository.values().stream()
                 .filter(meal -> Objects.equals(meal.getUserId(), userId))
-                .sorted(Comparator.comparing(Meal::getTime))
-                        .collect(Collectors.toList());
+                .sorted(Comparator.comparing(Meal::getTime).reversed())
+                .collect(Collectors.toList());
     }
 
 

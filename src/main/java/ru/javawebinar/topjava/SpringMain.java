@@ -5,6 +5,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 import ru.javawebinar.topjava.web.user.AbstractUserController;
@@ -37,8 +38,18 @@ public class SpringMain {
 
             MealRestController mealRestController = appCtx.getBean(MealRestController.class);
             System.out.println(mealRestController.get(1,1));
-            Meal meal = new Meal(null, 2, LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510);
+            Meal meal = new Meal(null, 2, LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "222", 510);
+            System.out.println("+++++++++++++++++++++");
             mealRestController.save(meal,1);
+            System.out.println("+++++++++++++++++++++");
+            mealRestController.save(meal,2);
+            System.out.println("*******************");
+            for (MealWithExceed meal2:
+                 mealRestController.getAll(1,1000)) {
+                System.out.println(meal2);
+                
+            }
+            System.out.println("*******************");
 //            mealRestController.save(MealsUtil.MEALS.get(0),1);
             System.out.println("___" + mealRestController.getAll(1,1));
         }

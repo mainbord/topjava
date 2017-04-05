@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.model;
 
+import org.springframework.context.annotation.Bean;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -69,7 +71,7 @@ public class Meal extends BaseEntity{
     @Override
     public String toString() {
         return "Meal{" +
-                "id=" + id +
+                "userId=" + userId +
                 ", dateTime=" + dateTime +
                 ", description='" + description + '\'' +
                 ", calories=" + calories +

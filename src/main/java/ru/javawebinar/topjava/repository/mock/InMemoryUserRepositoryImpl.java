@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.NamedEntity;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
+import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.UsersUtil;
 
 import java.util.*;
@@ -24,6 +25,7 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
                 UsersUtil.users) {
             save(user);
         }
+        System.out.println(repository.size());
     }
 
     @Override

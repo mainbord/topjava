@@ -1,10 +1,9 @@
 package ru.javawebinar.topjava.repository.mock;
 
+import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
-import ru.javawebinar.topjava.util.UsersUtil;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,28 +15,32 @@ import java.util.stream.Collectors;
  * GKislin
  * 15.09.2015.
  */
+@Repository
 public class InMemoryMealRepositoryImpl implements MealRepository {
     private Map<Integer, Meal> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.MEALS.forEach(this::save);
+        new MealsUtil();
+        for (Meal meal:
+                MealsUtil.MEALS) {
+            save(meal);
+        }
+        System.out.println(repository.size());
     }
 
     @Override
     public Meal save(Meal meal) {
-        if (meal.getUserId() == null)
-            return null;
-        if (meal.isNew()) {
-            meal.setId(counter.incrementAndGet());
-        }
+        if (meal.getUserId() == null) {return null;}
+        boolean old = meal.isNew();
+        if (old) {meal.setId(counter.incrementAndGet());}
 /*        repository.put(meal.getId(), meal);
         return meal;*/
         Meal mealRep = repository.get(meal.getId());
-        if (mealRep == null && meal.isNew()) {
+        if (mealRep == null && old) {
             repository.put(meal.getId(), meal);
             return meal;
-        } else if (mealRep != null && !meal.isNew()) {
+        } else if (mealRep != null && ! old) {
             if (mealRep.getUserId().equals(meal.getUserId())) {
                 repository.put(meal.getId(), meal);
                 return meal;

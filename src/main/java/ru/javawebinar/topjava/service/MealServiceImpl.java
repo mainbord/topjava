@@ -18,8 +18,14 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public void save(Meal meal, Integer userId) {
+
         meal.setUserId(userId);
-        ValidationUtil.checkNotFoundWithId(mealRepository.save(meal), meal.getId());
+        if (meal.getId() == null)
+            ValidationUtil.checkNotFound(mealRepository.save(meal, userId), "null");
+        else
+            ValidationUtil.checkNotFoundWithId(mealRepository.save(meal, userId), meal.getId());
+/*        meal.setUserId(userId);
+        ValidationUtil.checkNotFoundWithId(mealRepository.save(meal,userId), meal.getId());*/
     }
 
     @Override

@@ -21,29 +21,10 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.MEALS.forEach(this::save);
+        MealsUtil.MEALS.forEach(meal -> this.save(meal,1));
     }
 
     @Override
-    public Meal save(Meal meal) {
-        if (meal.getUserId() == null) {return null;}
-        boolean old = meal.isNew();
-        if (old) {meal.setId(counter.incrementAndGet());}
-        Meal mealRep = repository.get(meal.getId());
-        if (mealRep == null && old) {
-            repository.put(meal.getId(), meal);
-            return meal;
-        } else if (mealRep != null && ! old) {
-            if (mealRep.getUserId().equals(meal.getUserId())) {
-                repository.put(meal.getId(), meal);
-                return meal;
-            }
-        }
-        return null;
-    }
-
-
-    /*3.1: если еда отсутствует или чужая, возвращать null/false (см. комментарии в UserRepository)*/
     public Meal save(Meal meal, Integer userID) {
         if (meal == null || userID == null) return null;
         boolean old = meal.isNew();
@@ -59,14 +40,15 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     @Override
     public boolean delete(int id, Integer userId)
     {
-        Predicate<Meal> p1 = meal -> meal.getId() == id && meal.getUserId().equals(userId);
-        return repository.values().stream().anyMatch(p1) && repository.remove(id) != null;
+        return userId != null && repository.entrySet()
+                .removeIf(entry -> entry.getKey().equals(id) &&
+                        Objects.equals(entry.getValue().getUserId(), userId));
     }
 
     @Override
     public Meal get(int id, Integer userId) {
-        Meal tempMeal = repository.get(id);
-        return tempMeal == null ? null : tempMeal.getUserId().equals(userId) ? tempMeal : null;
+        Meal meal = repository.get(id);
+        return meal == null ? null : meal.getUserId().equals(userId) ? meal : null;
     }
 
     @Override

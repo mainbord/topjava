@@ -59,6 +59,5 @@
         </c:forEach>
     </table>
 </section>
-
 </body>
 </html>

@@ -23,6 +23,15 @@ public class MealsUtil {
     public static final int DEFAULT_CALORIES_PER_DAY = 2000;
 
     public static void main(String[] args) {
+
+        System.out.println("________________________________________________________________");
+        for (Meal meal:
+             MEALS) {
+            System.out.println(meal);
+        }
+        System.out.println("________________________________________________________________");
+
+
         List<MealWithExceed> mealsWithExceeded = getFilteredWithExceeded(MEALS, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
         mealsWithExceeded.forEach(System.out::println);
 

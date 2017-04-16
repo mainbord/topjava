@@ -41,7 +41,7 @@ public class JdbcMealRepositoryImpl implements MealRepository {
             jdbcTemplate.update("INSERT INTO meals(datetime, description, calories, user_id) VALUES " +
                     "('" + meal.getDateTime() + "' , '" + meal.getDescription() + "', " + meal.getCalories() + ", " + userId + ")");
         } else {
-            String sqlStatement = "UPDATE meals SET datetime= '" + meal.getDateTime() + "' description = '" + meal.getDescription() + "' calories= " + meal.getCalories() + " user_id = " + userId + " WHERE id= " + meal.getId() + " AND user_id = " + userId;
+            String sqlStatement = "UPDATE meals SET datetime='" + meal.getDateTime() + "', description='" + meal.getDescription() + "', calories=" + meal.getCalories() + ", user_id=" + userId + " WHERE id= " + meal.getId() + " AND user_id = " + userId;
             jdbcTemplate.update(sqlStatement);
         }
         return meal;
@@ -60,12 +60,12 @@ public class JdbcMealRepositoryImpl implements MealRepository {
 
     @Override
     public List<Meal> getAll(int userId) {
-        return jdbcTemplate.query("SELECT * FROM meals ORDER BY datetime DESC", ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM meals WHERE user_id=" + userId + " ORDER BY datetime DESC", ROW_MAPPER);
     }
 
     @Override
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
-        String query = "SELECT * FROM meals WHERE datetime BETWEEN " + "'" + startDate +"'" + " AND '" + endDate + "' ORDER BY datetime";
+        String query = "SELECT * FROM meals WHERE datetime BETWEEN " + "'" + startDate +"'" + " AND '" + endDate + "' AND user_id=" + userId + " ORDER BY datetime";
         return jdbcTemplate.query(query, ROW_MAPPER);
     }
 }

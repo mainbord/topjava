@@ -1,9 +1,13 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.AssumptionViolatedException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.Stopwatch;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,6 +21,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
 
+import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
@@ -29,6 +34,8 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
 
+    private static final Logger logger = getLogger(MealServiceTest.class);
+
     static {
         SLF4JBridgeHandler.install();
     }
@@ -38,6 +45,30 @@ public class MealServiceTest {
 
     @Rule
     public final ExpectedException exception = ExpectedException.none();
+
+
+    @Rule
+    public Stopwatch stopwatch = new Stopwatch() {
+        @Override
+        protected void succeeded(long nanos, Description description) {
+            logger.info(description + " " + nanos);
+        }
+
+        @Override
+        protected void failed(long nanos, Throwable e, Description description) {
+            logger.info(description + " " + nanos);
+        }
+
+        @Override
+        protected void skipped(long nanos, AssumptionViolatedException e, Description description) {
+            logger.info(description + " " + nanos);
+        }
+
+        @Override
+        protected void finished(long nanos, Description description) {
+            logger.info(description + " " + nanos);
+        }
+    };
 
     @Test
     public void testDelete() throws Exception {

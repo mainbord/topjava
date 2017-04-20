@@ -44,7 +44,8 @@ public class JpaMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        return em.find(Meal.class, id);
+        List<Meal> list = em.createNamedQuery(Meal.GET, Meal.class).setParameter("id",id).setParameter("user_id", userId).getResultList();
+        return list == null ? null : list.size() == 1 ? list.get(0) : null;
     }
 
     @Override

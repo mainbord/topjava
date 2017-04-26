@@ -17,7 +17,18 @@ import java.util.List;
 public class SpringMain {
     public static void main(String[] args) {
         // java 7 Automatic resource management
-        try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml","spring/mock.xml")) {
+/*        try (
+                ConfigurableApplicationContext appCtx =
+                     new ClassPathXmlApplicationContext(new String[]{"spring/spring-app.xml","spring/spring-db.xml","spring/spring-tools.xml"},true)
+        )
+        {*/
+        ConfigurableApplicationContext appCtx = null;
+        try {
+
+            appCtx = new ClassPathXmlApplicationContext(new String[]{"spring/spring-app.xml", "spring/spring-db.xml"}, false);
+            appCtx.getEnvironment().setActiveProfiles(Profiles.ACTIVE_DB, Profiles.REPOSITORY_IMPLEMENTATION);
+            appCtx.refresh();
+
             System.out.println("Bean definition names: " + Arrays.toString(appCtx.getBeanDefinitionNames()));
             AdminRestController adminUserController = appCtx.getBean(AdminRestController.class);
             adminUserController.create(new User(null, "userName", "email", "password", Role.ROLE_ADMIN));
@@ -30,5 +41,16 @@ public class SpringMain {
                             LocalDate.of(2015, Month.MAY, 31), LocalTime.of(11, 0));
             filteredMealsWithExceeded.forEach(System.out::println);
         }
+        finally {
+            if (appCtx != null){
+                try {
+                    appCtx.close();
+                }
+                catch (Exception e){
+                    System.out.println("Exception when trying to close apptx");
+                }
+            }
+        }
+        //}
     }
 }

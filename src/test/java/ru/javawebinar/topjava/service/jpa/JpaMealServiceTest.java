@@ -7,6 +7,5 @@ import ru.javawebinar.topjava.service.MealServiceTest;
 /**
  * Created by mainbord on 25.04.17.
  */
-@ActiveProfiles({Profiles.ACTIVE_DB, Profiles.JPA})
 public class JpaMealServiceTest extends MealServiceTest {
 }

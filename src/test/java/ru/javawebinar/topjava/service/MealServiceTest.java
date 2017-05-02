@@ -71,7 +71,6 @@ public class MealServiceTest {
     @Autowired
     private MealService service;
 
-
     @Test
     public void testDelete() throws Exception {
         service.delete(MEAL1_ID, USER_ID);

@@ -3,6 +3,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://topjava.javawebinar.ru/functions" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib prefix="from" uri="http://www.springframework.org/tags/form" %>
 <html>
 <jsp:include page="fragments/headTag.jsp"/>
 <%--<head>
@@ -17,6 +19,9 @@
 <%--    <h3>Meals</h3>--%>
     <h3><spring:message code="meals.title"/></h3>
 
+
+    <c:url var="filterAction" value="/meal/filter"/>
+    <form:form action="${filterAction}" commandName="date">
     <form method="post" action="meals?action=filter">
         <dl>
             <dt>From Date:</dt>
@@ -36,6 +41,7 @@
         </dl>
         <button type="submit">Filter</button>
     </form>
+    </form:form>
     <hr>
 <%--    <a href="meals?action=create">Add Meal</a>--%>
     <a href="meal/create">Add Meal</a>

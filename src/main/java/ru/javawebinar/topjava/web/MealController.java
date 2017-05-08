@@ -13,11 +13,13 @@ import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealWithExceed;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
-import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
@@ -30,7 +32,7 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
  */
 @Controller
 public class MealController {
-    private static final Logger LOG = LoggerFactory.getLogger(MealRestController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MealController.class);
 
     @Autowired
     private final MealService service;
@@ -101,5 +103,34 @@ public class MealController {
         model.addAttribute("meal", meal);
         request.setAttribute("action", "create");
         return "meal";
+    }
+
+    @RequestMapping(value = "/meal/filter", method = RequestMethod.POST)
+    public String filter(Model model, HttpServletRequest request) {
+
+        LocalDate startDate = DateTimeUtil.parseLocalDate(request.getParameter("startDate"));
+        LocalDate endDate = DateTimeUtil.parseLocalDate(request.getParameter("endDate"));
+        LocalTime startTime = DateTimeUtil.parseLocalTime(request.getParameter("startTime"));
+        LocalTime endTime = DateTimeUtil.parseLocalTime(request.getParameter("endTime"));
+
+        int userId = AuthorizedUser.id();
+        LOG.info("getAll for User {}", userId);
+        System.out.println("________________");
+        List<MealWithExceed> ll= MealsUtil.getFilteredWithExceeded(
+                service.getBetweenDates(
+                        startDate != null ? startDate : DateTimeUtil.MIN_DATE,
+                        endDate != null ? endDate : DateTimeUtil.MAX_DATE, userId),
+                startTime != null ? startTime : LocalTime.MIN,
+                endTime != null ? endTime : LocalTime.MAX,
+                AuthorizedUser.getCaloriesPerDay());
+        int ii = ll.size();
+        model.addAttribute("meals", MealsUtil.getFilteredWithExceeded(
+                service.getBetweenDates(
+                        startDate != null ? startDate : DateTimeUtil.MIN_DATE,
+                        endDate != null ? endDate : DateTimeUtil.MAX_DATE, userId),
+                startTime != null ? startTime : LocalTime.MIN,
+                endTime != null ? endTime : LocalTime.MAX,
+                AuthorizedUser.getCaloriesPerDay()));
+        return "meals";
     }
 }

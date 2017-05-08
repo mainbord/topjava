@@ -114,16 +114,6 @@ public class MealController {
         LocalTime endTime = DateTimeUtil.parseLocalTime(request.getParameter("endTime"));
 
         int userId = AuthorizedUser.id();
-        LOG.info("getAll for User {}", userId);
-        System.out.println("________________");
-        List<MealWithExceed> ll= MealsUtil.getFilteredWithExceeded(
-                service.getBetweenDates(
-                        startDate != null ? startDate : DateTimeUtil.MIN_DATE,
-                        endDate != null ? endDate : DateTimeUtil.MAX_DATE, userId),
-                startTime != null ? startTime : LocalTime.MIN,
-                endTime != null ? endTime : LocalTime.MAX,
-                AuthorizedUser.getCaloriesPerDay());
-        int ii = ll.size();
         model.addAttribute("meals", MealsUtil.getFilteredWithExceeded(
                 service.getBetweenDates(
                         startDate != null ? startDate : DateTimeUtil.MIN_DATE,

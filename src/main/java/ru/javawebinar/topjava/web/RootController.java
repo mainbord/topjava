@@ -32,4 +32,10 @@ public class RootController {
         AuthorizedUser.setId(userId);
         return "redirect:meals";
     }
+
+/*    @RequestMapping(value = "/meals", method = RequestMethod.GET)
+    public String meals(Model model) {
+        model.addAttribute("meals", service.getAll());
+        return "meals";
+    }*/
 }

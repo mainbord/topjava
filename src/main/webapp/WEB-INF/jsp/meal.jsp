@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="from" uri="http://www.springframework.org/tags/form" %>
 
@@ -16,8 +16,6 @@
         </c:when>
         <c:otherwise>
             <h2><spring:message code="meal.edit"/></h2>
-            ${param.action}
-            sdfsdf
         </c:otherwise>
     </c:choose>
 
@@ -28,7 +26,17 @@
 <form:form action="${addAction}" commandName="meal">
 
     <form method="post" action="meals">
-        <dd> <form:input  path="id" readonly="true" disabled="true"/> </dd>
+
+
+        <dl>
+            <dd>
+                <spring:message text="ID"/>
+            </dd>
+            <dd>
+                <form:input path="id" readonly="true" size="8" disabled="true"/>
+                <form:hidden path="id"/>
+            </dd>
+        </dl>
         <dl>
             <dt><spring:message code="meals.date"/>:</dt>
             <dd> <form:input path="dateTime"/> </dd>

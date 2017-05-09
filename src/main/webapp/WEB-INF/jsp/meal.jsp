@@ -9,12 +9,18 @@
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
-    <c:if test="${param.action == 'create'}">
-        <h2><spring:message code="meal.create"/></h2>
-    </c:if>
-    <c:if test="${param.action != 'create'}">
-        <h2><spring:message code="meal.edit"/></h2>
-    </c:if>
+
+    <c:choose>
+        <c:when test="${sessionScope.action == 'create'}">
+            <h2><spring:message code="meal.create"/></h2>
+        </c:when>
+        <c:otherwise>
+            <h2><spring:message code="meal.edit"/></h2>
+            ${param.action}
+            sdfsdf
+        </c:otherwise>
+    </c:choose>
+
     <hr>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
 
@@ -35,8 +41,8 @@
             <dt><spring:message code="meals.calories"/>:</dt>
             <dd> <form:input path="calories"/> </dd>
         </dl>
-        <button type="submit">Save</button>
-        <button onclick="window.history.back()">Cancel</button>
+        <button type="submit"><spring:message code="meal.save"/></button>
+        <button onclick="window.history.back()"><spring:message code="meal.cancel"/></button>
     </form>
 </form:form>
 </section>

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
-import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
@@ -21,7 +20,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Objects;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkIdConsistent;
@@ -42,24 +40,18 @@ public class MealController {
         this.service = service;
     }
 
-    @RequestMapping(value = "/meals", method = RequestMethod.GET)
-    public String meals(Model model) {
-        int userId = AuthorizedUser.id();
-        LOG.info("getAll for User {}", userId);
-        model.addAttribute("meals", MealsUtil.getWithExceeded(service.getAll(userId), AuthorizedUser.getCaloriesPerDay()));
-        return "meals";
-    }
 
     @RequestMapping(value = "/meal/{id}", method = RequestMethod.GET)
-    public String meal(Model model, @PathVariable("id") int id) {
+    public String meal(Model model, @PathVariable("id") int id, HttpServletRequest request) {
         int userId = AuthorizedUser.id();
         LOG.info("get meal {} for User {}", id, userId);
+        request.getSession().setAttribute("action", "update");
         model.addAttribute("meal", service.get(id, userId));
         return "meal";
     }
 
     @RequestMapping(value = "/meal/delete/{id}", method = RequestMethod.GET)
-    public String delete(Model model, @PathVariable("id") int id) {
+    public String delete(@PathVariable("id") int id) {
         int userId = AuthorizedUser.id();
         LOG.info("delete meal {} for User {}", id, userId);
         service.delete(id, userId);
@@ -76,32 +68,11 @@ public class MealController {
         return "redirect:/meals";
     }
 
-
-    public Meal create1(Meal meal) {
-        int userId = AuthorizedUser.id();
-        checkNew(meal);
-        LOG.info("create {} for User {}", meal, userId);
-        return service.save(meal, userId);
-    }
-
-    public void update1(Meal meal, int id) {
-        int userId = AuthorizedUser.id();
-        checkIdConsistent(meal, id);
-        LOG.info("update {} for User {}", meal, userId);
-        service.update(meal, userId);
-    }
-
-    private int getId(HttpServletRequest request) {
-        String paramId = Objects.requireNonNull(request.getParameter("id"));
-        return Integer.valueOf(paramId);
-    }
-
-
     @RequestMapping(value = "/meal/create", method = RequestMethod.GET)
     public String create(Model model, HttpServletRequest request) {
         final Meal meal = new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000);
+        request.getSession().setAttribute("action", "create");
         model.addAttribute("meal", meal);
-        request.setAttribute("action", "create");
         return "meal";
     }
 
@@ -122,5 +93,25 @@ public class MealController {
                 endTime != null ? endTime : LocalTime.MAX,
                 AuthorizedUser.getCaloriesPerDay()));
         return "meals";
+    }
+
+
+    public Meal create1(Meal meal) {
+        int userId = AuthorizedUser.id();
+        checkNew(meal);
+        LOG.info("create {} for User {}", meal, userId);
+        return service.save(meal, userId);
+    }
+
+    public void update1(Meal meal, int id) {
+        int userId = AuthorizedUser.id();
+        checkIdConsistent(meal, id);
+        LOG.info("update {} for User {}", meal, userId);
+        service.update(meal, userId);
+    }
+
+    private int getId(HttpServletRequest request) {
+        String paramId = Objects.requireNonNull(request.getParameter("id"));
+        return Integer.valueOf(paramId);
     }
 }

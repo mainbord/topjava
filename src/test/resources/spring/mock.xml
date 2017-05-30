@@ -5,10 +5,4 @@
 
     <context:component-scan base-package="ru.javawebinar.topjava.**.repository.mock"/>
     <context:component-scan base-package="ru.javawebinar.topjava.**.web"/>
-
-<!-- export TOPJAVA_ROOT=/home/mainbord/IdeaProjects/topjava
- env TOPJAVA_ROOT=/home/mainbord/IdeaProjects/topjava
- cd /home/mainbord/programes/idea-IU/bin
- ./idea.sh-->
-
 </beans>

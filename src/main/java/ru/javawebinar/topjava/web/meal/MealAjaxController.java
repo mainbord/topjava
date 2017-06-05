@@ -43,7 +43,7 @@ public class MealAjaxController extends AbstractMealController {
     }*/
 
 
-/*    @PostMapping
+    @PostMapping
     public ResponseEntity<String> createOrUpdate(@Valid Meal meal, BindingResult result) {
         if (result.hasErrors()) {
             StringBuilder sb = new StringBuilder();
@@ -57,16 +57,16 @@ public class MealAjaxController extends AbstractMealController {
             super.update(meal,meal.getId());
         }
         return new ResponseEntity<>(HttpStatus.OK);
-    }*/
+    }
 
-    @PostMapping
+/*    @PostMapping
     public void createOrUpdate(Meal meal) {
         if (meal.isNew()) {
             super.create(meal);
         } else {
             super.update(meal,meal.getId());
         }
-    }
+    }*/
 
     @Override
     @PostMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)

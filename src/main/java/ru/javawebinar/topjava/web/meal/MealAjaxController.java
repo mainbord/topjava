@@ -53,6 +53,9 @@ public class MealAjaxController extends AbstractMealController {
         if (meal.isNew()) {
             super.create(meal);
         }
+        else {
+            super.update(meal,meal.getId());
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

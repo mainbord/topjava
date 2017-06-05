@@ -114,11 +114,11 @@
                     <input type="hidden" id="id" name="id">
 
                     <div class="form-group">
-                        <label for="dateTime" class="control-label col-xs-3"><spring:message
+                        <label for="datetime" class="control-label col-xs-3"><spring:message
                                 code="meals.dateTime"/></label>
 
                         <div class="col-xs-9">
-                            <input type="datetime-local" class="form-control" id="dateTime" name="dateTime"
+                            <input type="datetime-local" class="form-control" id="datetime" name="dateTime"
                                    placeholder="<spring:message code="meals.dateTime"/>">
                         </div>
                     </div>
@@ -126,6 +126,7 @@
                         <label for="description" class="control-label col-xs-3"><spring:message
                                 code="meals.description"/></label>
 
+                        <div class="col-xs-9">
                         <div class="col-xs-9">
                             <input type="text" class="form-control" id="description" name="description"
                                    placeholder="<spring:message code="meals.description"/>">

@@ -6,12 +6,15 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.util.ValidationUtil;
 import ru.javawebinar.topjava.util.exception.ErrorInfo;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
+import java.net.BindException;
 
 @ControllerAdvice(annotations = RestController.class)
 @Order(Ordered.HIGHEST_PRECEDENCE + 5)
@@ -26,10 +29,32 @@ public class ExceptionInfoHandler {
         return logAndGetErrorInfo(req, e, false);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+     @ExceptionHandler(MethodArgumentNotValidException.class)
+     @ResponseBody
+     @Order(Ordered.HIGHEST_PRECEDENCE + 2)
+     public ErrorInfo restValidationError(HttpServletRequest req, MethodArgumentNotValidException e){
+        return logAndGetErrorInfo(req, e, true);
+    }
+
     @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseBody
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
+        return logAndGetErrorInfo(req, e, true);
+    }
+
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 500
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseBody
+    public ErrorInfo empty(HttpServletRequest req, ConstraintViolationException e) {
+        return logAndGetErrorInfo(req, e, true);
+    }
+
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 500
+    @ExceptionHandler(BindException.class)
+    @ResponseBody
+    public ErrorInfo empty2(HttpServletRequest req, ConstraintViolationException e) {
         return logAndGetErrorInfo(req, e, true);
     }
 
